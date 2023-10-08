@@ -1,6 +1,4 @@
 ﻿namespace xmas_stocking.Api.Models.Dto
 {
-    public class AttendeeDto
-    {
-    }
+    public record AttendeeDto(string Name, string Email);
 }
