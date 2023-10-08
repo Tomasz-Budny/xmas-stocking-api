@@ -1,3 +1,4 @@
+using xmas_stocking.Api.Exceptions;
 using xmas_stocking.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<ErrorHandlerMiddleware>();
 builder.Services.AddScoped<IDrawnService, DrawnService>();
+builder.Services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
 
 var app = builder.Build();
 
@@ -19,6 +22,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

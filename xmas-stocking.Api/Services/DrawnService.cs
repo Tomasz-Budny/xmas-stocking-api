@@ -38,6 +38,7 @@ namespace xmas_stocking.Api.Services
                     var lastAttendeeWithRandomlySelectedAttendeeName = attendesWithRandomlySelectedAttendeeName[^1];
                     var attendeeWithSelectedAttendeeName = new Attendee(attendee.Name, attendee.Email, lastAttendeeWithRandomlySelectedAttendeeName.RandomlySelectedAttendeeName);
                     lastAttendeeWithRandomlySelectedAttendeeName.RandomlySelectedAttendeeName = attendeesLeftToSelect.ToList()[^1].Name;
+                    attendesWithRandomlySelectedAttendeeName.Add(attendeeWithSelectedAttendeeName);
                     continue;
                 }
 
@@ -55,6 +56,7 @@ namespace xmas_stocking.Api.Services
         }
         private static void PrintAttendeesWithRandomlySelectedAtendee(IEnumerable<Attendee> attendees)
         {
+            Console.WriteLine("\n");
             foreach (var attendee in attendees)
             {
                 Console.WriteLine($"attendee name: {attendee.Name}, attendee email: {attendee.Email}, selected attendee name: {attendee.RandomlySelectedAttendeeName}\n");

@@ -20,7 +20,7 @@ namespace xmas_stocking.Api.Controllers
         [SwaggerOperation("for every attende draw one to give a gift")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post(IEnumerable<AttendeeDto> attendees)
+        public IActionResult Post(IEnumerable<AttendeeDto> attendees)
         {
             _drawnService.DrawnAttendeesToGiveGift(attendees);
             return Ok();
