@@ -10,27 +10,41 @@ namespace xmas_stocking.Api.Services
         private readonly int attendeeMinNameLength = 2;
         public void DrawnAttendeesToGiveGift(IEnumerable<AttendeeDto> attendes)
         {
+            if(attendes.Count() % 2 == 1)
+            {
+                throw new AttendeeListLengthIsOddException();
+            }
+
             var attendeesLeftToSelect = attendes;
             var attendesWithRandomlySelectedAttendeeName = new List<Attendee>();
 
             foreach (var attendee in attendes)
             {
+
                 if(attendee.Name.Length < attendeeMinNameLength)
                 {
                     throw new AttendeNameIsTooShortException(attendeeMinNameLength);
                 }
 
-                if (EmailValidator.Validate(attendee.Email))
+                if (!EmailValidator.Validate(attendee.Email))
                 {
                     throw new AttendeeEmailInvalidException();
                 }
 
                 var attendeesLeftToSelectWithoutCurrentAttendee = attendeesLeftToSelect.Where(att => att != attendee).ToList();
 
-                var ListMaxIndex = attendeesLeftToSelectWithoutCurrentAttendee.Count - 1;
+                if(attendeesLeftToSelectWithoutCurrentAttendee.Count == 0)
+                {
+                    var lastAttendeeWithRandomlySelectedAttendeeName = attendesWithRandomlySelectedAttendeeName[^1];
+                    var attendeeWithSelectedAttendeeName = new Attendee(attendee.Name, attendee.Email, lastAttendeeWithRandomlySelectedAttendeeName.RandomlySelectedAttendeeName);
+                    lastAttendeeWithRandomlySelectedAttendeeName.RandomlySelectedAttendeeName = attendeesLeftToSelect.ToList()[^1].Name;
+                    continue;
+                }
+
+                var ListLength = attendeesLeftToSelectWithoutCurrentAttendee.Count;
                 var random = new Random();
 
-                var drawedAttendee = attendeesLeftToSelectWithoutCurrentAttendee[random.Next(0, ListMaxIndex)];
+                var drawedAttendee = attendeesLeftToSelectWithoutCurrentAttendee[random.Next(0, ListLength)];
                 attendeesLeftToSelect = attendeesLeftToSelect.Where(att => att != drawedAttendee);
 
                 var attendeeWithRandomlySelectedAttendee = new Attendee(attendee.Name, attendee.Email, drawedAttendee.Name);
