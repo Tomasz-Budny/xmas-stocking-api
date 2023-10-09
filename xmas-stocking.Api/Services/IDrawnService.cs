@@ -1,9 +1,10 @@
-﻿using xmas_stocking.Api.Models.Dto;
+﻿using xmas_stocking.Api.Models;
+using xmas_stocking.Api.Models.Dto;
 
 namespace xmas_stocking.Api.Services
 {
     public interface IDrawnService
     {
-        void DrawnAttendeesToGiveGift(IEnumerable<AttendeeDto> attendes);
+        IEnumerable<AttendeeWithSelectedAtendee> DrawnAttendeesToGiveGift(IEnumerable<Attendee> attendes);
     }
 }

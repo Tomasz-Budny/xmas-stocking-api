@@ -1,14 +1,13 @@
 ﻿using EmailValidation;
 using xmas_stocking.Api.Exceptions;
 using xmas_stocking.Api.Models;
-using xmas_stocking.Api.Models.Dto;
 
 namespace xmas_stocking.Api.Services
 {
     public class DrawnService : IDrawnService
     {
         private readonly int attendeeMinNameLength = 2;
-        public void DrawnAttendeesToGiveGift(IEnumerable<AttendeeDto> attendes)
+        public IEnumerable<AttendeeWithSelectedAtendee> DrawnAttendeesToGiveGift(IEnumerable<Attendee> attendes)
         {
             if(attendes.Count() % 2 == 1)
             {
@@ -16,11 +15,10 @@ namespace xmas_stocking.Api.Services
             }
 
             var attendeesLeftToSelect = attendes;
-            var attendesWithRandomlySelectedAttendeeName = new List<Attendee>();
+            var attendesWithRandomlySelectedAttendee = new List<AttendeeWithSelectedAtendee>();
 
             foreach (var attendee in attendes)
             {
-
                 if(attendee.Name.Length < attendeeMinNameLength)
                 {
                     throw new AttendeNameIsTooShortException(attendeeMinNameLength);
@@ -35,31 +33,44 @@ namespace xmas_stocking.Api.Services
 
                 if(attendeesLeftToSelectWithoutCurrentAttendee.Count == 0)
                 {
-                    var lastAttendeeWithRandomlySelectedAttendeeName = attendesWithRandomlySelectedAttendeeName[^1];
-                    var attendeeWithSelectedAttendeeName = new Attendee(attendee.Name, attendee.Email, lastAttendeeWithRandomlySelectedAttendeeName.RandomlySelectedAttendeeName);
-                    lastAttendeeWithRandomlySelectedAttendeeName.RandomlySelectedAttendeeName = attendeesLeftToSelect.ToList()[^1].Name;
-                    attendesWithRandomlySelectedAttendeeName.Add(attendeeWithSelectedAttendeeName);
+                    var lastAttendeeWithRandomlySelectedAttendee = attendesWithRandomlySelectedAttendee[^1];
+                    var attendeeWithSelectedAttendeeName = new AttendeeWithSelectedAtendee()
+                    {
+                        Name = attendee.Name,
+                        Email = attendee.Email,
+                        PrefferedGifts = attendee.PrefferedGifts,
+                        RandomlySelectedAttendee = lastAttendeeWithRandomlySelectedAttendee
+                    };
+                    attendesWithRandomlySelectedAttendee.Add(attendeeWithSelectedAttendeeName);
                     continue;
                 }
 
                 var ListLength = attendeesLeftToSelectWithoutCurrentAttendee.Count;
                 var random = new Random();
 
-                var drawedAttendee = attendeesLeftToSelectWithoutCurrentAttendee[random.Next(0, ListLength)];
-                attendeesLeftToSelect = attendeesLeftToSelect.Where(att => att != drawedAttendee);
+                var randomlySelectedAttendee = attendeesLeftToSelectWithoutCurrentAttendee[random.Next(0, ListLength)];
+                attendeesLeftToSelect = attendeesLeftToSelect.Where(att => att != randomlySelectedAttendee);
 
-                var attendeeWithRandomlySelectedAttendee = new Attendee(attendee.Name, attendee.Email, drawedAttendee.Name);
-                attendesWithRandomlySelectedAttendeeName.Add(attendeeWithRandomlySelectedAttendee);
+                var attendeeWithRandomlySelectedAttendee = new AttendeeWithSelectedAtendee()
+                {
+                    Name = attendee.Name,
+                    Email = attendee.Email,
+                    PrefferedGifts = attendee.PrefferedGifts,
+                    RandomlySelectedAttendee = randomlySelectedAttendee
+                };
+
+                attendesWithRandomlySelectedAttendee.Add(attendeeWithRandomlySelectedAttendee);
             }
 
-            PrintAttendeesWithRandomlySelectedAtendee(attendesWithRandomlySelectedAttendeeName);
+            PrintAttendeesWithRandomlySelectedAtendee(attendesWithRandomlySelectedAttendee);
+            return attendesWithRandomlySelectedAttendee;
         }
-        private static void PrintAttendeesWithRandomlySelectedAtendee(IEnumerable<Attendee> attendees)
+        private static void PrintAttendeesWithRandomlySelectedAtendee(IEnumerable<AttendeeWithSelectedAtendee> attendees)
         {
             Console.WriteLine("\n");
             foreach (var attendee in attendees)
             {
-                Console.WriteLine($"attendee name: {attendee.Name}, attendee email: {attendee.Email}, selected attendee name: {attendee.RandomlySelectedAttendeeName}\n");
+                Console.WriteLine($"attendee name: {attendee.Name}, attendee email: {attendee.Email}, selected attendee name: {attendee.RandomlySelectedAttendee.Name}\n");
             }
         }
     }
