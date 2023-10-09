@@ -1,5 +1,6 @@
 ﻿using EmailValidation;
 using xmas_stocking.Api.Exceptions;
+using xmas_stocking.Api.Mappers;
 using xmas_stocking.Api.Models;
 
 namespace xmas_stocking.Api.Services
@@ -34,13 +35,8 @@ namespace xmas_stocking.Api.Services
                 if(giftPresentersWithoutCurrentAttendee.Count == 0)
                 {
                     var lastGiftPresenter = giftPresenters[^1];
-                    var currentGiftPresenter = new GiftPresenter()
-                    {
-                        Name = attendee.Name,
-                        Email = attendee.Email,
-                        PrefferedGifts = attendee.PrefferedGifts,
-                        GiftRecipient = lastGiftPresenter.GiftRecipient
-                    };
+
+                   var currentGiftPresenter = GiftPresentersMapper.Map(attendee, lastGiftPresenter.GiftRecipient);
                     giftPresenters.Add(currentGiftPresenter);
                     lastGiftPresenter.GiftRecipient = attendee;
                     continue;
@@ -49,16 +45,10 @@ namespace xmas_stocking.Api.Services
                 var ListLength = giftPresentersWithoutCurrentAttendee.Count;
                 var random = new Random();
 
-                var randomlySelectedAttendee = giftPresentersWithoutCurrentAttendee[random.Next(0, ListLength)];
-                attendeesLeftToSelect = attendeesLeftToSelect.Where(att => att != randomlySelectedAttendee);
+                var giftRecipient = giftPresentersWithoutCurrentAttendee[random.Next(0, ListLength)];
+                attendeesLeftToSelect = attendeesLeftToSelect.Where(att => att != giftRecipient);
 
-                var giftPresenter = new GiftPresenter()
-                {
-                    Name = attendee.Name,
-                    Email = attendee.Email,
-                    PrefferedGifts = attendee.PrefferedGifts,
-                    GiftRecipient = randomlySelectedAttendee
-                };
+                var giftPresenter = GiftPresentersMapper.Map(attendee, giftRecipient);
 
                 giftPresenters.Add(giftPresenter);
             }
