@@ -1,7 +1,10 @@
 using xmas_stocking.Api.Exceptions;
+using xmas_stocking.Api.Options;
 using xmas_stocking.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 
@@ -12,7 +15,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ErrorHandlerMiddleware>();
 builder.Services.AddScoped<IDrawnService, DrawnService>();
+builder.Services.AddScoped<ISmtpService, SmtpService>();
 builder.Services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
+builder.Services.Configure<SmtpOptions>(configuration.GetSection(SmtpOptions.SectionName));
 
 var app = builder.Build();
 

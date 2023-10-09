@@ -10,19 +10,22 @@ namespace xmas_stocking.Api.Controllers
     public class DrawnController : ControllerBase
     {
         protected readonly IDrawnService _drawnService;
+        protected readonly ISmtpService _smtpService;
 
-        public DrawnController(IDrawnService drawnService)
+        public DrawnController(IDrawnService drawnService, ISmtpService smtpService)
         {
             _drawnService = drawnService;
+            _smtpService = smtpService;
         }
 
         [HttpPost]
         [SwaggerOperation("for every attende draw one to give a gift")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Post(IEnumerable<Attendee> attendees)
+        public async Task<IActionResult> Post(IEnumerable<Attendee> attendees)
         {
-            _drawnService.DrawnGiftPresenters(attendees);
+            var giftPresenters =_drawnService.DrawnGiftPresenters(attendees);
+            await _smtpService.SendEmailsToGiftPresenters(giftPresenters);
             return Ok();
         }
     }
