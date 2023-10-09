@@ -22,7 +22,7 @@ namespace xmas_stocking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Post(IEnumerable<Attendee> attendees)
         {
-            _drawnService.DrawnAttendeesToGiveGift(attendees);
+            _drawnService.DrawnGiftPresenters(attendees);
             return Ok();
         }
     }

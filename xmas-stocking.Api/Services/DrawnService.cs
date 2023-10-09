@@ -7,7 +7,7 @@ namespace xmas_stocking.Api.Services
     public class DrawnService : IDrawnService
     {
         private readonly int attendeeMinNameLength = 2;
-        public IEnumerable<AttendeeWithSelectedAtendee> DrawnAttendeesToGiveGift(IEnumerable<Attendee> attendes)
+        public IEnumerable<GiftPresenter> DrawnGiftPresenters(IEnumerable<Attendee> attendes)
         {
             if(attendes.Count() % 2 == 1)
             {
@@ -15,7 +15,7 @@ namespace xmas_stocking.Api.Services
             }
 
             var attendeesLeftToSelect = attendes;
-            var attendesWithRandomlySelectedAttendee = new List<AttendeeWithSelectedAtendee>();
+            var giftPresenters = new List<GiftPresenter>();
 
             foreach (var attendee in attendes)
             {
@@ -29,48 +29,49 @@ namespace xmas_stocking.Api.Services
                     throw new AttendeeEmailInvalidException();
                 }
 
-                var attendeesLeftToSelectWithoutCurrentAttendee = attendeesLeftToSelect.Where(att => att != attendee).ToList();
+                var giftPresentersWithoutCurrentAttendee = attendeesLeftToSelect.Where(att => att != attendee).ToList();
 
-                if(attendeesLeftToSelectWithoutCurrentAttendee.Count == 0)
+                if(giftPresentersWithoutCurrentAttendee.Count == 0)
                 {
-                    var lastAttendeeWithRandomlySelectedAttendee = attendesWithRandomlySelectedAttendee[^1];
-                    var attendeeWithSelectedAttendeeName = new AttendeeWithSelectedAtendee()
+                    var lastGiftPresenter = giftPresenters[^1];
+                    var currentGiftPresenter = new GiftPresenter()
                     {
                         Name = attendee.Name,
                         Email = attendee.Email,
                         PrefferedGifts = attendee.PrefferedGifts,
-                        RandomlySelectedAttendee = lastAttendeeWithRandomlySelectedAttendee
+                        GiftRecipient = lastGiftPresenter.GiftRecipient
                     };
-                    attendesWithRandomlySelectedAttendee.Add(attendeeWithSelectedAttendeeName);
+                    giftPresenters.Add(currentGiftPresenter);
+                    lastGiftPresenter.GiftRecipient = attendee;
                     continue;
                 }
 
-                var ListLength = attendeesLeftToSelectWithoutCurrentAttendee.Count;
+                var ListLength = giftPresentersWithoutCurrentAttendee.Count;
                 var random = new Random();
 
-                var randomlySelectedAttendee = attendeesLeftToSelectWithoutCurrentAttendee[random.Next(0, ListLength)];
+                var randomlySelectedAttendee = giftPresentersWithoutCurrentAttendee[random.Next(0, ListLength)];
                 attendeesLeftToSelect = attendeesLeftToSelect.Where(att => att != randomlySelectedAttendee);
 
-                var attendeeWithRandomlySelectedAttendee = new AttendeeWithSelectedAtendee()
+                var giftPresenter = new GiftPresenter()
                 {
                     Name = attendee.Name,
                     Email = attendee.Email,
                     PrefferedGifts = attendee.PrefferedGifts,
-                    RandomlySelectedAttendee = randomlySelectedAttendee
+                    GiftRecipient = randomlySelectedAttendee
                 };
 
-                attendesWithRandomlySelectedAttendee.Add(attendeeWithRandomlySelectedAttendee);
+                giftPresenters.Add(giftPresenter);
             }
 
-            PrintAttendeesWithRandomlySelectedAtendee(attendesWithRandomlySelectedAttendee);
-            return attendesWithRandomlySelectedAttendee;
+            PrintGiftPresenters(giftPresenters);
+            return giftPresenters;
         }
-        private static void PrintAttendeesWithRandomlySelectedAtendee(IEnumerable<AttendeeWithSelectedAtendee> attendees)
+        private static void PrintGiftPresenters(IEnumerable<GiftPresenter> giftPresenters)
         {
             Console.WriteLine("\n");
-            foreach (var attendee in attendees)
+            foreach (var giftPresenter in giftPresenters)
             {
-                Console.WriteLine($"attendee name: {attendee.Name}, attendee email: {attendee.Email}, selected attendee name: {attendee.RandomlySelectedAttendee.Name}\n");
+                Console.WriteLine($"gift presenter name: {giftPresenter.Name}, gift presenter email: {giftPresenter.Email}, gift recipient name: {giftPresenter.GiftRecipient.Name}\n");
             }
         }
     }
