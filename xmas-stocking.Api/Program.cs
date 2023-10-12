@@ -21,6 +21,15 @@ builder.Services.AddScoped<IDrawnService, DrawnService>();
 builder.Services.AddScoped<ISmtpService, SmtpService>();
 builder.Services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
 builder.Services.Configure<SmtpOptions>(configuration.GetSection(SmtpOptions.SectionName));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAny", builder =>
+    {
+        builder.AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin();
+    });
+});
 
 var app = builder.Build();
 
@@ -33,6 +42,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
+app.UseCors("AllowAny");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
