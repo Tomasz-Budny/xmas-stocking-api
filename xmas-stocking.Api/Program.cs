@@ -1,3 +1,4 @@
+using Azure.Identity;
 using xmas_stocking.Api.Exceptions;
 using xmas_stocking.Api.Options;
 using xmas_stocking.Api.Services;
@@ -31,6 +32,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Configuration.AddAzureKeyVault(
+    new Uri("https://xmas-stocking-secrets.vault.azure.net/"),
+    new DefaultAzureCredential());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
