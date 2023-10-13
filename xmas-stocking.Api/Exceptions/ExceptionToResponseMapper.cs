@@ -9,7 +9,7 @@ namespace xmas_stocking.Api.Exceptions
             {
                 XmasStockingException ex => new ExceptionResponse(new Error(GetErrorCode(ex), ex.Message)
                     , HttpStatusCode.BadRequest),
-                _ => new ExceptionResponse(new Error("error", "There was an unexpected error."),
+                _ => new ExceptionResponse(new Error("error", exception.Message),
                     HttpStatusCode.InternalServerError)
             };
 
