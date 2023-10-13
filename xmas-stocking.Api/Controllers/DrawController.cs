@@ -7,14 +7,14 @@ namespace xmas_stocking.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DrawnController : ControllerBase
+    public class DrawController : ControllerBase
     {
-        protected readonly IDrawnService _drawnService;
+        protected readonly IDrawService _drawService;
         protected readonly ISmtpService _smtpService;
 
-        public DrawnController(IDrawnService drawnService, ISmtpService smtpService)
+        public DrawController(IDrawService drawnService, ISmtpService smtpService)
         {
-            _drawnService = drawnService;
+            _drawService = drawnService;
             _smtpService = smtpService;
         }
 
@@ -24,7 +24,7 @@ namespace xmas_stocking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(IEnumerable<Attendee> attendees)
         {
-            var giftPresenters =_drawnService.DrawnGiftPresenters(attendees);
+            var giftPresenters =_drawService.DrawGiftPresenters(attendees);
             await _smtpService.SendEmailsToGiftPresenters(giftPresenters);
             return Ok();
         }

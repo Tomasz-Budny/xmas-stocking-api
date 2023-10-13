@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddScoped<ErrorHandlerMiddleware>();
-builder.Services.AddScoped<IDrawnService, DrawnService>();
+builder.Services.AddScoped<IDrawService, DrawService>();
 builder.Services.AddScoped<ISmtpService, SmtpService>();
 builder.Services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
 builder.Services.Configure<SmtpOptions>(configuration.GetSection(SmtpOptions.SectionName));

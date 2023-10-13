@@ -5,10 +5,10 @@ using xmas_stocking.Api.Models;
 
 namespace xmas_stocking.Api.Services
 {
-    public class DrawnService : IDrawnService
+    public class DrawService : IDrawService
     {
         private readonly int attendeeMinNameLength = 2;
-        public IEnumerable<GiftPresenter> DrawnGiftPresenters(IEnumerable<Attendee> attendes)
+        public IEnumerable<GiftPresenter> DrawGiftPresenters(IEnumerable<Attendee> attendes)
         {
             if(attendes.Count() % 2 == 1)
             {

@@ -43,10 +43,10 @@ namespace xmas_stocking.Api.Services
             smtp.Disconnect(true);
         }
 
-        private string GetGiftPresenterEmailTemplate(GiftPresenter giftPresenter)
+        private static string GetGiftPresenterEmailTemplate(GiftPresenter giftPresenter)
         {
             var header = $"<h1>Cześć, {giftPresenter.Name}</h1><p>Wylosowana przez Ciebie osoba to: <b>{giftPresenter.GiftRecipient.Name}</b></p>";
-            var additional = giftPresenter.GiftRecipient.PrefferedGifts is null ? string.Empty : $"<p>Preferowane przez to osobę prezenty to: {giftPresenter.GiftRecipient.PrefferedGifts}</p>";
+            var additional = string.IsNullOrWhiteSpace(giftPresenter.GiftRecipient.PreferredGifts) ? string.Empty : $"<p>Preferowane przez to osobę prezenty to: {giftPresenter.GiftRecipient.PreferredGifts}</p>";
             var footer = "<p>Pozdrawiamy!</p>";
 
             return string.Concat(header, additional, footer);
