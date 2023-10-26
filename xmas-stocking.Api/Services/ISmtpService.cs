@@ -1,4 +1,4 @@
-﻿using xmas_stocking.Api.Models;
+﻿using xmas_stocking.DAL.Persistance.Models;
 
 namespace xmas_stocking.Api.Services
 {

@@ -1,8 +1,8 @@
 ﻿using EmailValidation;
+using xmas_stocking.Api.Dtos;
 using xmas_stocking.Api.Exceptions;
 using xmas_stocking.Api.Mappers;
-using xmas_stocking.Api.Models;
-using xmas_stocking.Api.Models.Dtos;
+using xmas_stocking.DAL.Persistance.Models;
 
 namespace xmas_stocking.Api.Services
 {

@@ -1,10 +1,10 @@
 ﻿using MailKit.Security;
 using MimeKit.Text;
 using MimeKit;
-using xmas_stocking.Api.Models;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using xmas_stocking.Api.Options;
+using xmas_stocking.DAL.Persistance.Models;
 
 namespace xmas_stocking.Api.Services
 {

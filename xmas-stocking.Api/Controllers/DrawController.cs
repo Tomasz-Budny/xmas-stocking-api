@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using xmas_stocking.Api.Models.Dtos;
+using xmas_stocking.Api.Dtos;
 using xmas_stocking.Api.Services;
 
 namespace xmas_stocking.Api.Controllers
