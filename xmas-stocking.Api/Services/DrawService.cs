@@ -9,7 +9,7 @@ namespace xmas_stocking.Api.Services
     public class DrawService : IDrawService
     {
         private readonly int attendeeMinNameLength = 2;
-        public IEnumerable<GiftPresenter> DrawGiftPresenters(IEnumerable<AttendeeDto> attendeDtos)
+        public Draw DrawGiftPresenters(IEnumerable<AttendeeDto> attendeDtos)
         {
             if(attendeDtos.Count() % 2 == 1)
             {
@@ -56,7 +56,11 @@ namespace xmas_stocking.Api.Services
             }
 
             PrintGiftPresenters(giftPresenters);
-            return giftPresenters;
+            return new Draw()
+            {
+                Attendees = giftPresenters,
+                NumberOfAttendees = giftPresenters.Count()
+            };
         }
         private static void PrintGiftPresenters(IEnumerable<GiftPresenter> giftPresenters)
         {

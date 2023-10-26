@@ -5,6 +5,6 @@ namespace xmas_stocking.Api.Services
 {
     public interface IDrawService
     {
-        IEnumerable<GiftPresenter> DrawGiftPresenters(IEnumerable<AttendeeDto> attendes);
+        Draw DrawGiftPresenters(IEnumerable<AttendeeDto> attendes);
     }
 }

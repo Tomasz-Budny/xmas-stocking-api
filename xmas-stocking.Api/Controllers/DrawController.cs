@@ -24,8 +24,8 @@ namespace xmas_stocking.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(IEnumerable<AttendeeDto> attendeeDtos)
         {
-            var giftPresenters =_drawService.DrawGiftPresenters(attendeeDtos);
-            //await _smtpService.SendEmailsToGiftPresenters(giftPresenters);
+            var draw =_drawService.DrawGiftPresenters(attendeeDtos);
+            //await _smtpService.SendEmailsToGiftPresenters(draw.Attendees);
             return Ok();
         }
     }
