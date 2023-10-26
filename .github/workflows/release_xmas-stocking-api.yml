@@ -4,10 +4,10 @@
 name: Build and deploy ASP.Net Core app to Azure Web App - xmas-stocking-api
 
 on:
-  push:
+  workflow_dispatch:
+  pull_request:
     branches:
       - release
-  workflow_dispatch:
 
 jobs:
   build:
