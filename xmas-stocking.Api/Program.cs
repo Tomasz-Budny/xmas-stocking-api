@@ -2,6 +2,7 @@ using Azure.Identity;
 using xmas_stocking.Api.Exceptions;
 using xmas_stocking.Api.Options;
 using xmas_stocking.Api.Services;
+using xmas_stocking.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddScoped<IDrawService, DrawService>();
 builder.Services.AddScoped<ISmtpService, SmtpService>();
 builder.Services.AddSingleton<IExceptionToResponseMapper, ExceptionToResponseMapper>();
 builder.Services.Configure<SmtpOptions>(configuration.GetSection(SmtpOptions.SectionName));
+builder.Services.AddPersistance(configuration);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAny", builder =>
@@ -32,9 +34,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Configuration.AddAzureKeyVault(
-    new Uri("https://xmas-stocking-secrets.vault.azure.net/"),
-    new DefaultAzureCredential());
+//builder.Configuration.AddAzureKeyVault(
+//    new Uri("https://xmas-stocking-secrets.vault.azure.net/"),
+//    new DefaultAzureCredential());
 
 var app = builder.Build();
 
