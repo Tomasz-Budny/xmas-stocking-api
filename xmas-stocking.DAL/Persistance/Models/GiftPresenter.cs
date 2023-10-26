@@ -1,6 +1,9 @@
-﻿namespace xmas_stocking.DAL.Persistance.Models;
-
-public class GiftPresenter : Attendee
+﻿namespace xmas_stocking.DAL.Persistance.Models
 {
-    public Attendee GiftRecipient { get; set; }
+    public class GiftPresenter : Attendee
+    {
+        public Attendee GiftRecipient { get; set; }
+    }
 }
+
+
