@@ -2,23 +2,25 @@
 using xmas_stocking.Api.Exceptions;
 using xmas_stocking.Api.Mappers;
 using xmas_stocking.Api.Models;
+using xmas_stocking.Api.Models.Dtos;
 
 namespace xmas_stocking.Api.Services
 {
     public class DrawService : IDrawService
     {
         private readonly int attendeeMinNameLength = 2;
-        public IEnumerable<GiftPresenter> DrawGiftPresenters(IEnumerable<Attendee> attendes)
+        public IEnumerable<GiftPresenter> DrawGiftPresenters(IEnumerable<AttendeeDto> attendeDtos)
         {
-            if(attendes.Count() % 2 == 1)
+            if(attendeDtos.Count() % 2 == 1)
             {
                 throw new AttendeeListLengthIsOddException();
             }
 
-            var attendeesLeftToSelect = attendes;
+            var attendees = attendeDtos.Select(attendee => AttendeeMapper.Map(attendee));
+            var attendeesLeftToSelect = attendees;
             var giftPresenters = new List<GiftPresenter>();
 
-            foreach (var attendee in attendes)
+            foreach (var attendee in attendees)
             {
                 if(attendee.Name.Length < attendeeMinNameLength)
                 {

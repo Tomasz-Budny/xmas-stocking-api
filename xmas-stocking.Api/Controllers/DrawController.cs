@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using xmas_stocking.Api.Models;
+using xmas_stocking.Api.Models.Dtos;
 using xmas_stocking.Api.Services;
 
 namespace xmas_stocking.Api.Controllers
@@ -22,10 +22,10 @@ namespace xmas_stocking.Api.Controllers
         [SwaggerOperation("for every attende draw one to give a gift")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post(IEnumerable<Attendee> attendees)
+        public async Task<IActionResult> Post(IEnumerable<AttendeeDto> attendeeDtos)
         {
-            var giftPresenters =_drawService.DrawGiftPresenters(attendees);
-            await _smtpService.SendEmailsToGiftPresenters(giftPresenters);
+            var giftPresenters =_drawService.DrawGiftPresenters(attendeeDtos);
+            //await _smtpService.SendEmailsToGiftPresenters(giftPresenters);
             return Ok();
         }
     }
