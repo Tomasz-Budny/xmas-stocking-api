@@ -10,11 +10,6 @@ namespace xmas_stocking.Api.Services
         private readonly int attendeeMinNameLength = 2;
         public IEnumerable<GiftPresenter> DrawGiftPresenters(IEnumerable<Attendee> attendes)
         {
-            if(attendes.Count() % 2 == 1)
-            {
-                throw new AttendeeListLengthIsOddException();
-            }
-
             var attendeesLeftToSelect = attendes;
             var giftPresenters = new List<GiftPresenter>();
 
